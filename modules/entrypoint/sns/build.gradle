@@ -1,0 +1,26 @@
+plugins {
+    id 'org.springframework.boot'
+}
+
+dependencies {
+    implementation project(':modules:domain')
+    implementation project(':modules:application')
+    implementation project(':modules:adapter:postgres')
+    implementation project(':modules:adapter:sns')
+
+    implementation 'org.springframework.cloud:spring-cloud-function-adapter-aws:4.3.0'
+    implementation 'software.amazon.awssdk:sns:2.25.17'
+    implementation 'com.amazonaws:aws-lambda-java-events:3.11.2'
+}
+
+task buildZip(type: Zip) {
+    from compileJava
+    from processResources
+    into('lib') {
+        from(configurations.runtimeClasspath) {
+            exclude 'tomcat-embed-*'
+        }
+    }
+}
+
+build.dependsOn buildZip

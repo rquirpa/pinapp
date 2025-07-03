@@ -1,0 +1,86 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AWS Serverless Spring Boot 3 API - com.pinapp.challenge::challenge
+
+Globals:
+  Api:
+    EndpointConfiguration: REGIONAL
+
+Parameters:
+  SpringProfile:
+    Type: String
+    Default: local
+  JwtSecret:
+    Type: String
+    Default: dGhpcy1pcy1hLXN1cGVyLXNlY3VyZS1zZWNyZXQtbG9uZy1rZXktZHVtbXk=
+
+Resources:
+  ChallengeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: rquirpa-pinapp-proxy-function
+      Handler: com.pinapp.challenge.entrypoint.web.StreamLambdaHandler::handleRequest
+      Runtime: java17
+      CodeUri: modules/entrypoint/web/build/distributions/web.zip
+      MemorySize: 512
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Statement:
+            - Effect: Allow
+              Action:
+                - sns:Publish
+              Resource: !ImportValue rquirpa-challenge-ClientNotificationTopicArn
+      Timeout: 30
+      Environment:
+        Variables:
+          POSTGRES_HOST: !ImportValue rquirpa-challenge-PostgresEndpoint
+          POSTGRES_PORT: !ImportValue rquirpa-challenge-PostgresPort
+          POSTGRES_USER: !ImportValue rquirpa-challenge-PostgresUser
+          POSTGRES_PASSWORD: !ImportValue rquirpa-challenge-PostgresPassword
+          POSTGRES_DATABASE: !ImportValue rquirpa-challenge-PostgresDatabase
+          SNS_TOPIC_ARN: !ImportValue rquirpa-challenge-ClientNotificationTopicArn
+          SPRING_PROFILES_ACTIVE: !Ref SpringProfile
+          JWT_SECRET: !Ref JwtSecret
+      Events:
+        ProxyResource:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: any
+
+  SnsConsumerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: rquirpa-pinapp-sns-consumer
+      Handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker::handleRequest
+      Runtime: java17
+      SnapStart:
+        ApplyOn: PublishedVersions
+      CodeUri: modules/entrypoint/sns/build/distributions/sns.zip
+      Policies: AWSLambdaBasicExecutionRole
+      MemorySize: 512
+      Timeout: 30
+      Environment:
+        Variables:
+          MAIN_CLASS: com.pinapp.challenge.FunctionConfiguration
+          SPRING_CLOUD_FUNCTION_DEFINITION: eventListener
+          POSTGRES_HOST: !ImportValue rquirpa-challenge-PostgresEndpoint
+          POSTGRES_PORT: !ImportValue rquirpa-challenge-PostgresPort
+          POSTGRES_USER: !ImportValue rquirpa-challenge-PostgresUser
+          POSTGRES_PASSWORD: !ImportValue rquirpa-challenge-PostgresPassword
+          POSTGRES_DATABASE: !ImportValue rquirpa-challenge-PostgresDatabase
+          SPRING_PROFILES_ACTIVE: !Ref SpringProfile
+          JWT_SECRET: !Ref JwtSecret
+      Events:
+        MySNSEvent:
+          Type: SNS
+          Properties:
+            Topic: !ImportValue rquirpa-challenge-ClientNotificationTopicArn
+
+Outputs:
+  ApiUrl:
+    Description: Application URL
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/'
+  SwaggerUrl:
+    Description: Swagger URL
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/v3/api-docs.yaml'

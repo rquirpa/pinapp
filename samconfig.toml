@@ -1,0 +1,22 @@
+version = 0.1
+[default.deploy.parameters]
+template_file = "template.yaml"
+stack_name = "pinapp-rquirpa-app"
+resolve_s3 = true
+s3_prefix = "pinapp-rquirpa-app"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+
+[infra.deploy.parameters]
+template_file = "template.infra.yaml"
+stack_name = "pinapp-rquirpa-infra"
+resolve_s3 = true
+s3_prefix = "pinapp-rquirpa-infra"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+
+[default.local_start_api.parameters]
+warm_containers = "EAGER"
+
+[default.local_start_lambda.parameters]
+warm_containers = "EAGER"

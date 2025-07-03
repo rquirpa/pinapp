@@ -1,0 +1,16 @@
+{
+  "Records": [
+    {
+      "EventSource": "aws:sns",
+      "EventVersion": "1.0",
+      "EventSubscriptionArn": "arn:aws:sns:us-east-1:000000000000:client-notifications",
+      "Sns": {
+        "MessageId": "12345678-1234-1234-1234-123456789012",
+        "TopicArn": "arn:aws:sns:us-east-1:000000000000:client-notifications",
+        "Subject": "Test",
+        "Message": "{ \"id\": \"088cfa7b-8418-4348-a167-700d48c07d6d\", \"type\": \"client:created\", \"payload\": {\"id\": \"cef61d1e-a433-46c1-9b7d-9cadc5b84da1\", \"firstName\": \"roberto\", \"lastName\": \"quirpa\", \"sex\": \"MALE\", \"birthDate\": \"1988-05-04\", \"age\": 37 } }",
+        "Timestamp": "2025-06-17T15:00:00.000Z"
+      }
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+dependencies {
+    implementation project(':modules:domain')
+    implementation project(':modules:application')
+
+    implementation 'software.amazon.awssdk:sns:2.25.17'
+    implementation 'software.amazon.awssdk:url-connection-client:2.25.17'
+}

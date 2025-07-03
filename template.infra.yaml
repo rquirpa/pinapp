@@ -1,0 +1,86 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: basic infrastructure SNS and RDS
+
+Parameters:
+  DBUsername:
+    Type: String
+    Default: postgres
+    Description: Usuario de la base de datos
+  DBPassword:
+    Type: String
+    Default: s3cretp4ss
+#    NoEcho: true
+    Description: Password de la base de datos
+  DBName:
+    Type: String
+    Default: postgres
+    Description: Nombre de la base de datos
+  DBAllocatedStorage:
+    Type: Number
+    Default: 20
+    Description: Almacenamiento en GB para RDS (mínimo recomendado 20)
+
+Resources:
+
+  ## SNS Topic
+  ClientNotificationTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: client-notifications
+
+  ## RDS PostgreSQL
+  PostgresDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: "rquirpa-pinapp-instance"
+      AllocatedStorage: !Ref DBAllocatedStorage
+      DBInstanceClass: db.t4g.micro
+      Engine: postgres
+      EngineVersion: "16.6"
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
+      DBName: !Ref DBName
+      PubliclyAccessible: true
+      StorageType: gp2
+      BackupRetentionPeriod: 0
+      MultiAZ: false
+      DeletionProtection: false
+
+Outputs:
+
+  SNSTopicArn:
+    Description: "ARN del tópico SNS"
+    Value: !Ref ClientNotificationTopic
+    Export:
+      Name: rquirpa-challenge-ClientNotificationTopicArn
+
+  PostgresEndpoint:
+    Description: "Endpoint del RDS PostgreSQL"
+    Value: !GetAtt PostgresDB.Endpoint.Address
+    Export:
+      Name: rquirpa-challenge-PostgresEndpoint
+
+  PostgresPort:
+    Description: "Puerto del RDS PostgreSQL"
+    Value: !GetAtt PostgresDB.Endpoint.Port
+    Export:
+      Name: rquirpa-challenge-PostgresPort
+
+  PostgresUser:
+    Description: "Username del RDS PostgreSQL"
+    Value: !Ref DBUsername
+    Export:
+      Name: rquirpa-challenge-PostgresUser
+
+  PostgresPassword:
+    Description: "Password del RDS PostgreSQL"
+    Value: !Ref DBPassword
+    Export:
+      Name: rquirpa-challenge-PostgresPassword
+
+  PostgresDatabase:
+    Description: "Database del RDS PostgreSQL"
+    Value: !Ref DBName
+    Export:
+      Name: rquirpa-challenge-PostgresDatabase

@@ -1,0 +1,24 @@
+# Reduce logging level to make sure the application works with SAM local
+# https://github.com/aws/serverless-java-container/issues/134
+logging:
+  level:
+    root: WARN
+
+spring:
+  profiles:
+    active: ${SPRING_ACTIVE_PROFILE}
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DATABASE:docker}
+    username: ${POSTGRES_USER:docker}
+    password: ${POSTGRES_PASSWORD:docker}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+
+sns:
+  topic-arn: ${SNS_TOPIC_ARN:arn:aws:sns:us-east-1:000000000000:client-notifications}

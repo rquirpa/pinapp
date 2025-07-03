@@ -1,0 +1,8 @@
+rootProject.name = 'pinapp-challenge'
+
+include ":modules:domain"
+include ":modules:application"
+include ":modules:adapter:postgres"
+include ":modules:adapter:sns"
+include ":modules:entrypoint:web"
+include ":modules:entrypoint:sns"

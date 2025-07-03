@@ -1,0 +1,18 @@
+# Project exclude paths
+/.gradle/
+/build/
+/modules/adapter/postgres/build/
+/modules/adapter/postgres/build/classes/java/main/
+/modules/adapter/sns/build/
+/modules/adapter/sns/build/classes/java/main/
+/modules/application/build/
+/modules/application/build/classes/java/main/
+/modules/domain/build/
+/modules/domain/build/classes/java/main/
+/modules/entrypoint/build/
+/modules/entrypoint/sns/build/
+/modules/entrypoint/sns/build/classes/java/main/
+/modules/entrypoint/web/build/
+/modules/entrypoint/web/build/classes/java/main/
+/.idea/
+/.aws-sam/
