@@ -1,5 +1,21 @@
 # challenge serverless API
 
+## Cómo probar en Producción
+
+El API está desplegado en AWS y accesible a través de internet en la siguiente URL:  : **https://2ujgjzhsmb.execute-api.us-east-1.amazonaws.com/Prod**
+
+Usá el siguiente comando `curl` para obtener un token:
+
+```bash
+
+curl --location 'https://2ujgjzhsmb.execute-api.us-east-1.amazonaws.com/Prod/login' \
+--header 'Content-Type: application/json' \
+--data '{
+    "username": "admin",
+    "password": "123456"
+}'
+```
+
 ## Cómo ver la documentación en Swagger Editor
 
 1. Ingresá a [https://editor.swagger.io](https://editor.swagger.io)
