@@ -2,7 +2,9 @@
 
 ## Cómo probar en Producción
 
-El API está desplegado en AWS y accesible a través de internet en la siguiente URL:  : **https://2ujgjzhsmb.execute-api.us-east-1.amazonaws.com/Prod**
+El API está desplegado en AWS y accesible a través de internet en la siguiente URL: 
+
+https://2ujgjzhsmb.execute-api.us-east-1.amazonaws.com/Prod
 
 Usá el siguiente comando `curl` para obtener un token:
 
